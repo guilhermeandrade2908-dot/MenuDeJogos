@@ -27,7 +27,7 @@ programa {
 
   // ESCOPO GLOBAL DO JOGO DA NAVE:
 
-  cadeia espaco[9][9]
+  cadeia espaco[9][9] // MATRIZ QUE GERA O ESPAÇO/CAMPO ONDE SERÁ EXECUTADO O JOGO DA NAVE
 
   
   funcao inicio() {
@@ -332,21 +332,24 @@ programa {
 
     cadeia comando = ""
 
+    // LAÇO DE REPETIÇÃO PRINCIPAL DO JOGO DA NAVE:
     enquanto(comando != "sair") {
-
+      
+      // LAÇO DE REPETIÇÃO QUE LIMPA O CAMPO NA MEMÓRIA
       para(inteiro i = 0; i < 9; i++) {
         para(inteiro j = 0; j < 9; j++) {
           espaco[i][j] = "[ ]"
         }
       }
 
-      espaco[8][naveX] = "[▲]"
+      espaco[8][naveX] = "[▲]" // POSICIONA A NAVE NO MAPA
 
-      limpa()
+      limpa() // APAGA O CAMPO ANTERIOR PARA DAR IMPRESSÃO DE MOVIMENTO
 
     escreva("=== JOGO DA NAVE ===\n")
     escreva("( Use A e D para mover | Digite 'sair' para parar )\n")
 
+    // RENDERIZA O MAPA NA TELA
     para(inteiro i = 0; i < 9; i++) {
       escreva("\n")
       para(inteiro j = 0; j < 9; j++) {
@@ -355,15 +358,16 @@ programa {
     }
     escreva("\n")
 
+    // SISTEMA DE MOVIMENTAÇÃO POR LEITURA DE ENTRADA E IF/ELSE IF
     escreva("\nComando: ")
     leia(comando)
 
-    se(comando == "a" ou comando == "A") {
+    se(comando == "a" ou comando == "A") { // SÓ MOVE PARA A ESQUERDA SE NÃO ESTIVER NA DIREITA
       se(naveX > 0) {
         naveX -= 1
       }
     }
-    senao se(comando == "d" ou comando == "D") {
+    senao se(comando == "d" ou comando == "D") { // SÓ MOVE PARA A DIREITA SE NÃO ESTIVER NA ESQUERDA
       se(naveX < 8) {
         naveX += 1
       }
