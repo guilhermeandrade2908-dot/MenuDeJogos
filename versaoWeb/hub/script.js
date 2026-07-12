@@ -35,13 +35,13 @@ insertCoinBtn.addEventListener("click", () => {
 
 // EVENTOS DE REDIRECIONAMENTO PARA AS PÁGINAS DOS JOGOS
 btnPong.addEventListener("click", () => {
-    window.location.href = "../pong/index.html";
+    window.location.href = "../pong/pong.html";
 });
 
 btnSpaceInvaders.addEventListener("click", () => {
-    window.location.href = "../space-invaders/index.html";
+    window.location.href = "../space-invaders/invaders.html";
 });
 
 btnSnake.addEventListener("click", () => {
-    window.location.href = "../snake/index.html";
+    window.location.href = "../snake/snake.html";
 });
