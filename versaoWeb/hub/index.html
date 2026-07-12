@@ -13,7 +13,7 @@
     <div class="arcade-container">
         <header class="arcade-header">
             <h1 class="neon-title">WEB RETRO ARCADE</h1>
-            <p class="blink-text">INSIRA A FICHA PARA COMEÇAR</p>
+            <button class="blink-text" id="insert-coin-btn">INSIRA A FICHA PARA COMEÇAR</button>
         </header>
 
         <main class="arcade-cabinet">
@@ -21,13 +21,13 @@
                 <h2 class="menu-title">SELECIONE O JOGO QUE DESEJA JOGAR.</h2>
 
                 <div class="button-panel">
-                    <button class="arcade-btn btn-pong">
+                    <button class="arcade-btn btn-pong" id="play-pong" disabled>
                         <span class="btn-icon">🏓</span> PONG
                     </button>
-                    <button class="arcade-btn btn-space-invaders">
+                    <button class="arcade-btn btn-space-invaders" id="play-invaders" disabled>
                         <span class="btn-icon">🚀</span> SPACE INVADERS
                     </button>
-                    <button class="arcade-btn btn-snake">
+                    <button class="arcade-btn btn-snake" id="play-snake" disabled>
                         <span class="btn-icon">🐍</span> SNAKE GAME
                     </button>
                 </div>
@@ -35,7 +35,7 @@
         </main>
 
         <footer class="arcade-footer">
-            <span class="credit-text">CREDITOS: 00</span>
+            <span id="footer-coins">CREDITOS: 00</span>
             <span class="blink-text-footer">PLAYER 1 READY!</span>
         </footer>
     </div>

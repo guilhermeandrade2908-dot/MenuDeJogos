@@ -53,11 +53,16 @@ body {
 
 /* EFEITO DE TEXTO PISCANTE */
 .blink-text {
+    background: transparent;
+    border: none;
+    font-family: "Press Start 2P", system-ui;
     font-size: 0.85rem;
     color: #ff00ff;
     margin-top: 0.5rem;
     margin-bottom: 3rem;
     letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
     animation: blink 1.2s infinite steps(2);
 }
 
