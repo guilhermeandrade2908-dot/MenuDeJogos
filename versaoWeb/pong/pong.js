@@ -19,6 +19,22 @@ const player = {
     score: 0
 };
 
+const cpu = {
+    x: canvas.width - 20 - raqueteLargura, // ALINHADO NA DIREITA, RECUADO 20PX
+    y: canvas.height / 2 - raqueteAltura / 2,
+    score: 0,
+    velocidade: 4.5 // VELOCIDADE MÁXIMA QUE A CPU CONSEGUE SE MOVER
+}
+
+const bola = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    raio: 7,
+    velocidadeX: 5, // DIREÇÃO E VELOCIDADE HORIZONTAL (POSITIVO = DIREITO, NEGATIVO = ESQUERDA)
+    velocidadeY: 5, // DIREÇÃO E VELOCIDADE VERTICAL (POSITIVO = BAIXO, NEGATIVO = CIMA)
+    velocidadeInicial: 5
+};
+
 // RASTREADOR DO MOUSE:
 canvas.addEventListener('mousemove', (evento) => {
     const retanguloCanvas = canvas.getBoundingClientRect();
@@ -33,6 +49,36 @@ canvas.addEventListener('mousemove', (evento) => {
         player.y = mouseY;
     }
 });
+
+// FUNÇÃO PARA RASTREAR A BOLA NO CENTRO APÓS UM PONTO:
+function resetarBola(quemPontuou) {
+    bola.x = canvas.width / 2;
+    bola.y = canvas.height / 2;
+
+    // INVERTE A DIREÇÃO INICIAL EM DIREÇÃO A QUEM LEVOU O PONTO
+    bola.velocidadeX = quemPontuou === "player" ? -bola.velocidadeInicial : bola.velocidadeInicial;
+
+    // ANGULAÇÃO ALEATÓRIA PARA NÃO SAIR SEMPRE EM LINHA RETA
+    bola.velocidadeY = (Math.random() > 0.5 ? 1 : -1) * bola.velocidadeInicial;
+}
+
+// INTELIGÊNCIA ARTIFICIAL DA CPU
+function atualizarCPU() {
+    // A CPU OLHA ONDE O CENTRO DA BOLA ESTÁ NO EIXO Y:
+    const centroCpu = cpu.y + raqueteAltura / 2;
+
+    // SE A BOLA ESTIVER ABAIXO DO CENTRO DA RAQUETE DA CPU, ELA SOBE
+    if (bola.y > centroCpu + 10) {
+        cpu.y += cpu.velocidade;
+    }
+    else if (bola.y < centroCpu - 10) {
+        cpu.y -= cpu.velocidade;
+    }
+
+    // BARREIRA DE SEGURANÇA PARA A CPU NÃO SAIR DA TELA:
+    if (cpu.y < 0) cpu.y = 0;
+    if (cpu.y > canvas.height - raqueteAltura) cpu.y = canvas.height - raqueteAltura;
+}
 
 // FUNÇÃO DE DESENHO DO JOGO:
 function desenharJogo() {
