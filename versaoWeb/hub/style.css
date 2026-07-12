@@ -51,19 +51,35 @@ body {
     position: relative;
 }
 
-/* EFEITO DE TEXTO PISCANTE */
-.blink-text {
-    background: transparent;
-    border: none;
+/* BOTÃO DE INSERIR FICHA */
+.arcade-coin-btn {
+    background: #1a0812;
+    border: 3px solid #ff007f;
+    border-radius: 50px;
     font-family: "Press Start 2P", system-ui;
-    font-size: 0.85rem;
-    color: #ff00ff;
-    margin-top: 0.5rem;
-    margin-bottom: 3rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ff007f;
+    padding: 0.8rem 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    animation: blink 1.2s infinite steps(2);
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.4),
+        0 4px 0 #b30059;
+    transition: all 0.1s ease;
+    animation: pulse-glow 1.5s infinite alternate;
+}
+
+.arcade-coin-btn:hover {
+    color: #fff;
+    background: #ff007f;
+    box-shadow: 0 0 20px #ff007f;
+}
+
+.arcade-coin-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 5px #ff007f, 0 0 0 #b30050;
 }
 
 /* A TELA DE TUBO  */
@@ -159,4 +175,13 @@ body {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
+}
+
+@keyframes pulse-glow {
+    from {
+        box-shadow: 0 0 10px rgba(255, 0, 127, 0.4), 0 4px 0 #b30059;
+    }
+    to {
+        box-shadow: 0 0 22px rgba(255, 0, 127, 0.8), 0 4px 0 #b30059;
+    }
 }
