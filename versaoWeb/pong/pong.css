@@ -90,6 +90,7 @@ canvas {
 
 /* BOTÃO DE VOLTAR PARA O MENU */
 .btn-back {
+    font-family: "Press Start 2P", system-ui;
     margin-top: 0.6rem;
     background: transparent;
     border: 2px solid #4e5473;
