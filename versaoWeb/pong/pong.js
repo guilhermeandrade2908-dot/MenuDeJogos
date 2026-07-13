@@ -6,6 +6,8 @@ const btnBack = document.getElementById("btn-back-menu");
 const htmlScorePlayer = document.getElementById("player-score");
 const htmlScoreCpu = document.getElementById("cpu-score");
 
+let jogoFinalizado = false;
+
 // CONFIGURAÇÃO DO BOTÃO DE VOLTAR PARA O MENU
 btnBack.addEventListener('click', () => {
     window.location.href = "../hub/index.html";
@@ -141,7 +143,12 @@ function aplicarFisica() {
         if (htmlScoreCpu) {
             htmlScoreCpu.innerText = String(cpu.score).padStart(2, '0');
         }
+
+        if (cpu.score >= 10) {
+            jogoFinalizado = true;
+        } else {
         resetarBola("cpu");
+        }
     }
     else if (bola.x + bola.raio > canvas.width) {
         // AUMENTA OS PONTOS DO PLAYER
@@ -149,9 +156,13 @@ function aplicarFisica() {
         if(htmlScorePlayer) {
             htmlScorePlayer.innerText = String(player.score).padStart(2, '0');
         }
-        resetarBola("player");
+
+        if (player.score >= 10) {
+            jogoFinalizado = true;
+        } else {
+             resetarBola("player");
+        }  
     }
-    
 }
 
 // FUNÇÃO DE DESENHO DO JOGO:
@@ -179,23 +190,49 @@ function desenharJogo() {
     context.shadowColor = "#ff007f";
     context.fillRect(cpu.x, cpu.y, raqueteLargura, raqueteAltura);
 
-    // DESENHA A BOLINHA (NEON BRANCO):
+    // SÓ DESENHA A BOLINHA (NEON BRANCO) SE O JOGO NÃO TIVER ACABADO:
+    if (!jogoFinalizado) {
     context.fillStyle = "#fff";
     context.shadowColor = "#fff";
     context.beginPath();
     // UTILIZANDO A FUNÇÃO ARC, DESENHA O CIRCULO:
     context.arc(bola.x, bola.y, bola.raio, 0, Math.PI * 2);
     context.fill();
-    
+    }
+    // TELA DE FIM DE JOGO
+    else {
+        context.shadowBlur = 20;
+        context.font = "bold 30px 'Press Start 2P', system-ui";
+        context.textAlign = "center";
+
+    if (player.score >= 10) {
+        context.fillStyle = "#00f0ff";
+        context.shadowColor = "#00f0ff";
+        context.fillText("VOCÊ VENCEU!", canvas.width / 2, canvas.height / 2);
+    } else {
+        context.fillStyle = "#ff007f";
+        context.shadowColor = "#ff007f";
+        context.fillText("GAME OVER!", canvas.width / 2, canvas.height / 2);
+    }
+
+    context.font = "10px 'Press Start 2P', system-ui";
+    context.fillStyle = "#fff";
+    context,shadowColor = "#fff";
+    context.shadowBlur = 8;
+    context.fillText("CLIQUE NO BOTÃO ABAIXO PARA VOLTAR", canvas.width / 2, canvas.height / 2 + 50);
+    }
+
     // RESETA O EFEITO DE SOMBRA PARA NÃO BORRAR OS PRÓXIMOS DESENHOS
     context.shadowBlur = 0;
 }
 
 function gameLoop() {
+    // SE O JOGO ACABOU, A IA E A FÍSICA CONGELA, MANTENDO APENAS O DESENHO ESTÁTICO DO FIM
+    if (!jogoFinalizado) {
     atualizarCPU();
     aplicarFisica();
+    }
     desenharJogo();
-    
     requestAnimationFrame(gameLoop);
 }
 
