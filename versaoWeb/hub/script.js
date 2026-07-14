@@ -39,7 +39,7 @@ btnPong.addEventListener("click", () => {
 });
 
 btnSpaceInvaders.addEventListener("click", () => {
-    window.location.href = "../space-invaders/invaders.html";
+    window.location.href = "../invaders/invaders.html";
 });
 
 btnSnake.addEventListener("click", () => {
