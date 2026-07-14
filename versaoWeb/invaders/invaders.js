@@ -5,6 +5,13 @@ const btnBack = document.getElementById("btn-back-menu");
 const htmlScore = document.getElementById("score-text");
 const htmlLives = document.getElementById("lives-text");
 
+// CONFIGURAÇÕES DOS TIROS
+const lasers = []; // GUARDA TODOS OS TIROS ATIVOS NA TELA
+const laserVelocidade = 12; // VELOCIDADE COM QUE O LASER SOBE (EIXO Y NEGATIVO)
+const laserLargura = 4;
+const laserAltura = 15;
+const maxLasersNaTela = 1;
+
 // CONFIGURAÇÃO DO BOTÃO DE VOLTAR PARA O MENU
 btnBack.addEventListener('click', () => {
     window.location.href = "../hub/index.html";
@@ -28,10 +35,9 @@ const player = {
 
 // RASTREADOR DE ENTRADAS DO TECLADO
 const teclas = {
-    arrowLeft: false,
-    arrowRight: false,
     a: false,
-    d: false
+    d: false,
+    " ": false // BARRA DE ESPAÇO
 };
 
 window.addEventListener("keydown", (evento) => { // ESCUTA QUANDO A TECLA É PRESSIONADA
@@ -45,6 +51,49 @@ window.addEventListener("keyup", (evento) => { // ESCUTA QUANDO A TECLA É SOLTA
         teclas[evento.key] = false;
     }
 });
+
+window.addEventListener("keydown", (evento) => {
+    if (evento.key in teclas) {
+        teclas[evento.key] = true;
+
+        if (evento.key === " ") {
+            dispararLaser();
+        }
+    }
+});
+
+// CRIA UM NOVO LASER NO TOPO DA NAVE
+function dispararLaser() {
+    // SE JÁ TIVER 1 DISPARO NA TELA, NÃO É POSSÍVEL ATIRAR:
+    if (lasers.length >= maxLasersNaTela) return;
+
+    const canhaoX = player.x + (naveWidth / 2) - (laserLargura / 2);
+    const canhaoY = player.y - 10;
+
+    lasers.push({
+        x: canhaoX,
+        y: canhaoY,
+        largura: laserLargura,
+        altura: laserAltura,
+        cor: "#ffff00"
+    });
+}
+
+// MOVE OS LASERS E REMOVE OS QUE SAÍRAM DA TELA
+function atualizarLasers() {
+    for (let i = lasers.length - 1; i >= 0; i--) {
+        const laser = lasers[i];
+
+        // FAZ O LASER SUBIR NO EIXO Y
+        laser.y -= laserVelocidade;
+
+        // SE O LASER SAIR PELO TOPO, ELA É REMOVIDA DO ARRAY
+        if (laser.y + laser.altura < 0) {
+            lasers.splice(i, 1); // REMOVE O ELEMENTO DO ÍNDICE 'I'
+        }
+    }
+}
+
 
 // ATUALIZADORES E FÍSICA DO JOGO
 function atualizarMovimento() {
@@ -87,6 +136,14 @@ function desenharJogo() {
         8 // ALTURA DO CANHÃO
     );
 
+    // DESENHO DOS LASERS DO JOGADOR
+    lasers.forEach(laser => {
+        context.fillStyle = laser.cor;
+        context.shadowBlur = 10;
+        context.shadowColor = laser.cor;
+        context.fillRect(laser.x, laser.y, laser.largura, laser.altura);
+    })
+
     // RESETA O EFEITO DE SOMBRA PARA NÃO IMPACTAR OUTRAS COISAS
     context.shadowBlur = 0;
 }
@@ -95,6 +152,7 @@ function desenharJogo() {
 function gameLoop() {
     if (!jogoFinalizado) {
         atualizarMovimento();
+        atualizarLasers();
     }
 
     desenharJogo();
