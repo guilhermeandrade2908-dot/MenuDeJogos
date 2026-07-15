@@ -24,8 +24,8 @@ const bunkerCor = "#00ff66";
 const aliens = [];
 const aliensLinhas = 4; // QUATRO FILEIRAS DE INIMIGOS
 const aliensColunas = 8; // OITO ALIENS POR FILEIRA
-const aliensWidth = 30;
-const aliensHeight = 24;
+const aliensWidth = 40;
+const aliensHeight = 32;
 const aliensRecuoX = 15; // ESPAÇO HORIZONTAL ENTRE ELES
 const aliensRecuoY = 15; // ESPAÇO VERTICAL ENTRE AS FILEIRAS
 
@@ -254,15 +254,54 @@ function desenharJogo() {
         context.shadowBlur = 10;
         context.shadowColor = "#ff007f";
 
-        // DESENHA O CORPO DO ALIEN
-        context.fillRect(alien.x, alien.y, alien.largura, alien.altura);
 
-        // DETALHE DOS OLHOS PRETOS DO ALIEN:
-        context.fillStyle = "#08090f";
-        context.shadowBlur = 0;
-        context.fillRect(alien.x + 6, alien.y + 6, 4, 4);
-        context.fillRect(alien.x + alien.largura - 10, alien.y + 6, 4, 4);
-    })
+        // 1 = PIXEL PINTADO
+        // 0 = PIXEL VAZIO
+        // 2 = OLHO DO ALIEN
+        const spriteAlien = [
+            [0, 0, 1, 0, 0, 0, 0, 1, 0, 0], // Chifres / Antenas
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0], // Cabeça
+            [0, 1, 1, 2, 1, 1, 2, 1, 1, 0], // Olhos (representados pelo número 2)
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // Corpo / Braços
+            [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+            [1, 0, 1, 0, 0, 0, 0, 1, 0, 1], // Perninhas laterais
+            [0, 0, 0, 1, 1, 1, 1, 0, 0, 0]  // Base do meio
+        ];
+
+        // CALCULA O TAMAMNHO DE CADA PIXEL INTERNO DO SPRITE BASEADO NO TAMANHO TOTAL DO ALIEN
+        const pixelTamanhoX = alien.largura / spriteAlien[0].length;
+        const pixelTamanhoY = alien.altura / spriteAlien.length;
+
+        // VARRE A MATRIZ DESENHANDO BLOCO POR BLOCO
+        for (let l = 0; l < spriteAlien.length; l++) {
+            for (let c = 0; c < spriteAlien[l].length; c++) {
+                const tipoPixel = spriteAlien[l][c];
+
+                if (tipoPixel === 1){
+                    // DESENHA A PARTE COLORIDA DO CORPO DO ALIEN
+                    context.fillStyle = "#ff007f";
+                    context.shadowBlur = 10;
+                    context.fillRect(
+                        alien.x + (c * pixelTamanhoX),
+                        alien.y + (l * pixelTamanhoY),
+                        pixelTamanhoX + 0.5,
+                        pixelTamanhoY + 0.5
+                    );
+                } else if (tipoPixel === 2) {
+                    // DESENHA OS OLHOS 
+                    context.fillStyle = "#08090f";
+                    context.shadowBlur = 0;
+                    context.fillRect(
+                        alien.x + (c * pixelTamanhoX),
+                        alien.y + (l * pixelTamanhoY),
+                        pixelTamanhoX + 0.5,
+                        pixelTamanhoY + 0.5
+                    );
+                }
+            }
+        };
+    });
 
     // RESETA O EFEITO DE SOMBRA PARA NÃO IMPACTAR OUTRAS COISAS
     context.shadowBlur = 0;
