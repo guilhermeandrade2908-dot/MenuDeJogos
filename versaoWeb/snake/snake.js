@@ -59,6 +59,23 @@ window.addEventListener("keydown", (evento) => {
         case "d":
             if (direcaoX !== -1) {direcaoX = 1; direcaoY = 0; direcaoMudouNesteFrame = true;}
     }
+
+    // BOTÃO ENTER PARA REINICIAR O JOGO:
+    if (evento.key === "Enter" && jogoFinalizado) {
+        // RESETA O ESTADO
+        cobrinha = [
+            {x: 10, y: 10},
+            {x: 9, y: 10},
+            {x: 8, y: 10}
+        ];
+        direcaoX = 1;
+        direcaoY = 0;
+        score = 0;
+        htmlScore.textContent = "0000";
+        gerarMaca();
+        jogoFinalizado = false;
+        return;
+    }
 });
 
 // FUNÇÃO DE MOVIMENTAÇÃO
@@ -68,6 +85,12 @@ function moverCobrinha() {
         x: cobrinha[0].x + direcaoX,
         y: cobrinha[0].y + direcaoY
     };
+
+    // CHECA SE A PRÓXIMA POSIÇÃO É UMA COLISÃO:
+    if (checarColisao(novaCabeca)) {
+        jogoFinalizado = true;
+        return; // SAI DA FUNÇÃO SEM REMOVER
+    }
 
     // CHECA SE A COBRINHA COMEU A MAÇÃ
     if (novaCabeca.x === maca.x && novaCabeca.y === maca.y) {
@@ -102,6 +125,28 @@ function gerarMaca() {
     if (travaComida) {
         gerarMaca(); // TENTARÁ GERAR EM OUTRO LUGAR
     }
+}
+
+// FUNÇÃO PARA CHECAR SE A COBRINHA BATEU NAS PAREDES OU EM SI MESMA:
+function checarColisao(cabeca) {
+    // COLISÃO COM AS PAREDES:
+    const bateuParedeEsquerda = cabeca.x < 0;
+    const batteuParedeDireita = cabeca.x >= colunas;
+    const bateuParedeTopo = cabeca.y < 0;
+    const bateuParedeBaixo = cabeca.y >= linhas;
+
+    if (bateuParedeEsquerda || batteuParedeDireita || bateuParedeTopo || bateuParedeBaixo) {
+        return true;
+    }
+
+    // COLISÃO COM SEU PRÓRPIO CORPO:
+    for (let i = 1; i < cobrinha.length; i++) {
+        if (cabeca.x === cobrinha[i].x && cabeca.y === cobrinha[i].y) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // FUNÇÃO QUE DESENHA O JOGO:
@@ -151,6 +196,31 @@ function desenharJogo() {
         6
     );
     context.fill();
+
+    // SE O JOGO ACABOU, DESENHA A TELA DE GAME OVER:
+    if (jogoFinalizado) {
+        context.fillStyle = "rgba(15, 17, 26, 0.85)";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // CONFIGURAÇÃO E DESENHO DO TEXTO "GAME OVER"
+        context.fillStyle = "#ff0055";
+        context.font = "20px 'Press Start 2P', system-ui";
+        context.textAlign = "center";
+        context.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
+
+        // DESENHA A PONTUAÇÃO FINAL DO JOGADOR
+        context.font = "14px 'Press Start 2P', system-ui";
+        context.fillStyle = "#fff";
+        context.shadowBlur = 8;
+        context.shadowColor = "#fff";
+        context.fillText(`PONTUAÇÃO FINAL: ${String(score).padStart(4, '0')}`, canvas.width / 2, canvas.height / 2);
+
+
+        // INSTRUÇÃO PARA REINICIAR
+        context.fillStyle = "#fff";
+        context.font = "10px 'Press Start 2P', system-ui";
+        context.fillText("Pressione [ENTER] para reiniciar", canvas.width / 2, canvas.height / 2 + 40);
+    }
 
     // RESETA O EFEITO DE SOMBRA PARA NÃO IMPACTAR OUTRAS COISAS
     context.shadowBlur = 0;
