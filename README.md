@@ -45,7 +45,6 @@ This repository was built to document my technical evolution in game development
 > ⚠️ **Technical Transition Note:** In the Web version, *Tic-Tac-Toe* (which focused on static console matrices) was replaced by *Pong*, along with the implementation of *Snake* and *Space Invaders*, all linked together through a main Hub and deployed via Vercel.
 
 ### 📂 Repository Structure
-* `📂 docs/`: Technical logs, diagrams, and deep dives into collision mathematics and algorithms used.
 * `📂 versaoPortugol/`: The original turn-based source code developed in Portugol Studio.
 * `📂 versaoWeb/`: The complete web application containing `index.html` (central Hub/Menu) at the root level and dedicated subdirectories for each game (`/pong`, `/invaders`, `/snake`).
 
